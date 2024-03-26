@@ -31,42 +31,41 @@
 // 			result += numbers[i] * numbers[i+1];
 // 		}
 // 	}
-// 	if(result >= 2**31){ result = 2**31 -1 }
 // 	return result;
 // }
 
-
 function solution(numbers){
 	const positives = numbers.filter(item => item > 1).sort((a, b) => b - a);
-	const negatives = numbers.filter(item => item < 0).sort((a, b) => b - a);
+	const negatives = numbers.filter(item => item < 0).sort((a, b) => a - b);
 	const zeros = numbers.filter(item => item === 0);
 	const ones = numbers.filter(item => item === 1);
 
-	let result = 0;
-	result += ones.reduce((acc, cur) => acc + cur, 0); //1은 전부다 더하기
+	let result = ones.reduce((acc, cur) => acc + cur, 0); // 1은 전부다 더하기
 
-	for (let i=0; i<positives.length; i+=2){
-		result += positives[i] * positives[i + 1];
+	// 양수 처리
+	for (let i = 0; i < positives.length; i += 2){
+		if (i + 1 < positives.length) {
+			result += positives[i] * positives[i + 1];
+		} else {
+			result += positives[i]; // 홀수 번째 양수를 처리
+		}
 	}
 
-	if(positives.length % 2 === 1){
-		result += positives[positives.length - 1];
-	}
-
-	for (let i=0; i<negatives.length; i+=2){
-		result += negatives[i] * negatives[i + 1];
-	}
-
-	if(positives.length % 2 === 1 && zeros.length === 0){
-		sum_max += negatives[negatives.length - 1];
+	// 음수 처리
+	for (let i = 0; i < negatives.length; i += 2){
+		if (i + 1 < negatives.length) {
+			result += negatives[i] * negatives[i + 1];
+		} else if (zeros.length === 0) { // 홀수 번째 음수를 처리하고 0이 없을 때
+			result += negatives[i];
+		}
 	}
 
 	return result;
-
 }
 
-// const fs = require("fs");
-// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-// const [n, ...input] = fs.readFileSync(filePath).toString().trim().split("\n").map(Number);
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const [n, ...input] = fs.readFileSync(filePath).toString().trim().split("\n").map(Number);
 
-console.log(solution([3, 2, 1, -1]));
+console.log(solution(input));
+

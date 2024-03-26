@@ -1,64 +1,49 @@
-class PriorityQueue{
-	constructor(){
-		this.heap = [];
-	}
+class PriorityQueue {
+  constructor() {
+    this.heap = [{ cost: 0, barn: 0 }]; // 최소 힙, 비용과 헛간 번호를 객체로 관리
+  }
 
-	size(){
-		return this.heap.length;
-	}
+  isEmpty() {
+    return this.heap.length === 1; // heap[0]은 사용하지 않음
+  }
 
-	swap(idx1, idx2){
-		[this.heap[idx2], this.heap[idx1]] = [this.heap[idx1], this.heap[idx2]];	
-	}
+  push({ cost, barn }) {
+    this.heap.push({ cost, barn });
+    let currentIndex = this.heap.length - 1;
+    let parentIndex = Math.floor(currentIndex / 2);
 
-	getParent(index){
-		return Math.floor(index - 1) / 2;
-	}
+    while (parentIndex !== 0 && this.heap[parentIndex].cost > cost) {
+      [this.heap[parentIndex], this.heap[currentIndex]] = [this.heap[currentIndex], this.heap[parentIndex]];
+      currentIndex = parentIndex;
+      parentIndex = Math.floor(currentIndex / 2);
+    }
+  }
 
-	getLeftChild(index){
-		return index * 2;
-	}
+  pop() {
+    if (this.isEmpty()) return undefined;
+    if (this.heap.length === 2) return this.heap.pop();
 
-	getRightChild(index){
-		return index * 2 + 1;
-	}
-
-	peek(){
-		return this.heap[1];
-	}
-
-	push(value){
-		this.heap.push(value);
-		let currentIndex = this.size() - 1;
-		while(currentIndex > 1 && this.heap[currentIndex] > this.heap[this.getParent(currentIndex)]){
-			this.swap(currentIndex, this.getParent(currentIndex));
-			currentIndex = this.getParent(currentIndex);
-		}
-		
-	}
-
-	pop(){
-		if (this.size() < 2) return null; // 힙이 비었거나 하나의 원소만 있을 때
-
-    const returnValue = this.heap[1]; // 반환할 최대값
-    this.heap[1] = this.heap.pop(); // 마지막 요소를 루트로 이동
+    const returnValue = this.heap[1];
+    this.heap[1] = this.heap.pop();
 
     let currentIndex = 1;
-    while (this.getLeftChild(currentIndex) < this.size()) {
-			let biggerChildIndex = this.getLeftChild(currentIndex);
-			if (this.getRightChild(currentIndex) < this.size() && this.heap[this.getRightChild(currentIndex)] > this.heap[biggerChildIndex]) {
-				biggerChildIndex = this.getRightChild(currentIndex);
-			}
+    let leftChildIndex = currentIndex * 2;
+    let rightChildIndex = currentIndex * 2 + 1;
 
-			if (this.heap[currentIndex] < this.heap[biggerChildIndex]) {
-				this.swap(currentIndex, biggerChildIndex);
-				currentIndex = biggerChildIndex;
-			} else {
-				break;
-			}
+    while (leftChildIndex < this.heap.length) {
+      let smallerChildIndex = leftChildIndex;
+      if (rightChildIndex < this.heap.length && this.heap[rightChildIndex].cost < this.heap[leftChildIndex].cost) {
+        smallerChildIndex = rightChildIndex;
+      }
+
+      if (this.heap[currentIndex].cost <= this.heap[smallerChildIndex].cost) break;
+
+      [this.heap[currentIndex], this.heap[smallerChildIndex]] = [this.heap[smallerChildIndex], this.heap[currentIndex]];
+      currentIndex = smallerChildIndex;
+      leftChildIndex = currentIndex * 2;
+      rightChildIndex = currentIndex * 2 + 1;
     }
 
     return returnValue;
-	}
-
+  }
 }
