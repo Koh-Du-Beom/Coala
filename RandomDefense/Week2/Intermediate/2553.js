@@ -1,6 +1,6 @@
 function solution(n){
 	let tmp = 1;
-	for(let i=2; i<=n; i++){
+	for(let i=1; i<=n; i++){
 		tmp *= i;
 	}
 
@@ -13,6 +13,6 @@ function solution(n){
 
 }
 
-// const fs = require('fs');
-// const n = fs.readFileSync("/dev/stdin").toString().trim().split(" ");
-console.log(solution(7));
+const fs = require('fs');
+const n = parseInt(fs.readFileSync("/dev/stdin").toString().trim(), 10);
+console.log(solution(n));
