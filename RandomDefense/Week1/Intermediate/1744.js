@@ -34,6 +34,10 @@
 // 	return result;
 // }
 
+
+
+
+
 function solution(numbers){
 	const positives = numbers.filter(item => item > 1).sort((a, b) => b - a);
 	const negatives = numbers.filter(item => item < 0).sort((a, b) => a - b);
