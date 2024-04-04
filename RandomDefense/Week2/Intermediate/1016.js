@@ -12,7 +12,6 @@ function solution(min, max){
 		}
 	}
 
-	dfdsfsdf;
 
 	notSquare.forEach(value => {
 		if (!value) count++;
